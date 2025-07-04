@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-translate-key="app_title">AI-Assisted Statistical Analysis</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/simple-statistics@7.8.3/dist/simple-statistics.min.js"></script>
+</head>
+<body>
+
+    <header>
+        <h1 data-translate-key="app_title">AI-Assisted Statistical Analysis</h1>
+        <div class="controls">
+            <div class="language-switcher">
+                <button id="lang-en" class="active">English</button>
+                <button id="lang-ar">العربية</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <div class="app-content">
+            <nav>
+                <button class="nav-btn active" data-module="data-module" data-translate-key="nav_data">Data</button>
+                <button class="nav-btn" data-module="eda-module" data-translate-key="nav_eda">EDA</button>
+                <button class="nav-btn" data-module="stats-module" data-translate-key="nav_stats">Statistical Analysis</button>
+                <button class="nav-btn" data-module="ml-module" data-translate-key="nav_ml">Machine Learning</button>
+                <button class="nav-btn" data-module="report-module" data-translate-key="nav_report">Report</button>
+            </nav>
+
+            <!-- Module Sections -->
+            <div id="data-module" class="module active">
+                <!-- ... (This section is unchanged) ... -->
+                <h2 data-translate-key="data_ingestion_title">Data Ingestion and Preprocessing</h2>
+                <div class="content-box">
+                    <h3 data-translate-key="upload_data_title">Upload Data (CSV)</h3>
+                    <input type="file" id="csv-file-input" accept=".csv">
+                    <p id="file-name-display"></p>
+                </div>
+                <div class="content-box" id="data-preview-container" style="display:none;">
+                    <h3 data-translate-key="data_preview_title">Data Preview</h3>
+                    <div id="data-table" class="table-container"></div>
+                </div>
+                 <div class="content-box" id="basic-stats-container" style="display:none;">
+                    <h3 data-translate-key="basic_stats_title">Basic Statistics</h3>
+                    <div id="basic-stats-table" class="table-container"></div>
+                </div>
+            </div>
+
+            <div id="eda-module" class="module">
+                 <!-- ... (This section is unchanged) ... -->
+                 <h2 data-translate-key="eda_title">Exploratory Data Analysis (EDA)</h2>
+                <div class="content-box">
+                    <h3 data-translate-key="visualization_title">Data Visualization</h3>
+                    <div class="controls-grid">
+                        <select id="eda-plot-type">
+                            <option value="histogram" data-translate-key="plot_type_histogram">Histogram</option>
+                            <option value="bar" data-translate-key="plot_type_barchart">Bar Chart</option>
+                            <option value="scatter" data-translate-key="plot_type_scatterplot">Scatter Plot</option>
+                            <option value="boxplot" data-translate-key="plot_type_boxplot">Box Plot</option>
+                        </select>
+                        <select id="eda-var1"></select>
+                        <select id="eda-var2" style="display: none;"></select>
+                        <button id="generate-plot-btn" data-translate-key="generate_plot_btn">Generate Plot</button>
+                    </div>
+                    <div id="plot-container">
+                        <canvas id="eda-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div id="stats-module" class="module">
+                 <h2 data-translate-key="stats_title">Statistical Analysis</h2>
+                <div class="content-box">
+                    <h3 data-translate-key="select_test_title">Select and Perform a Test</h3>
+                    <div class="controls-grid">
+                        <select id="stats-test-type">
+                            <option value="" data-translate-key="select_a_test">-- Select a Test --</option>
+                            <optgroup data-translate-key="parametric_tests" label="Parametric Tests">
+                                <option value="one-sample-t-test" data-translate-key="test_one_sample_t">One-Sample T-Test</option>
+                                <option value="independent-t-test">Independent Samples T-Test</option>
+                                <option value="paired-t-test">Paired Samples T-Test</option>
+                                <option value="one-way-anova">One-Way ANOVA</option>
+                                <option value="pearson-correlation">Pearson Correlation</option>
+                            </optgroup>
+                            <optgroup data-translate-key="nonparametric_tests" label="Non-Parametric Tests">
+                                 <option value="chi-squared-gof" data-translate-key="test_chi_squared_gof">Chi-Squared Goodness-of-Fit</option>
+                                 <option value="chi-squared">Chi-Squared Test of Independence</option>
+                                 <option value="mann-whitney-u">Mann-Whitney U Test</option>
+                                 <option value="wilcoxon-signed-rank">Wilcoxon Signed-Rank Test</option>
+                                 <option value="kruskal-wallis">Kruskal-Wallis Test</option>
+                            </optgroup>
+                        </select>
+                        <select id="stats-var1"></select>
+                        <select id="stats-var2"></select>
+                        <!-- Dynamic controls for specific tests -->
+                        <div id="one-sample-t-test-controls" class="special-controls" style="display: none;">
+                            <label for="hypo-mean" data-translate-key="hypo_mean_label">Hypothesized Mean:</label>
+                            <input type="number" id="hypo-mean" value="0">
+                        </div>
+                        <div id="chi-squared-gof-controls" class="special-controls" style="display: none;">
+                            <label data-translate-key="expected_props_label">Expected Proportions:</label>
+                            <div id="gof-proportions-inputs"></div>
+                        </div>
+
+                        <button id="run-test-btn" data-translate-key="run_test_btn">Run Test</button>
+                    </div>
+                    <div id="stats-results-container" style="display:none;">
+                        <h4 data-translate-key="test_results_title">Test Results</h4>
+                        <pre id="stats-output" class="results-box"></pre>
+                        <div id="stats-plot-container">
+                             <canvas id="stats-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="ml-module" class="module">
+                <!-- ... (This section is unchanged) ... -->
+                <h2 data-translate-key="ml_title">Machine Learning</h2>
+                 <div class="content-box">
+                    <h3 data-translate-key="linear_regression_title">Simple Linear Regression</h3>
+                    <div class="controls-grid">
+                        <label for="ml-independent-var" data-translate-key="independent_var_label">Independent Variable (X):</label>
+                        <select id="ml-independent-var"></select>
+                        <label for="ml-dependent-var" data-translate-key="dependent_var_label">Dependent Variable (Y):</label>
+                        <select id="ml-dependent-var"></select>
+                        <button id="run-regression-btn" data-translate-key="run_regression_btn">Run Regression</button>
+                    </div>
+                    <div id="ml-results-container" style="display:none;">
+                        <h4 data-translate-key="model_results_title">Model Results</h4>
+                        <pre id="ml-output" class="results-box"></pre>
+                        <div id="ml-plot-container">
+                             <canvas id="ml-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="report-module" class="module">
+                 <!-- ... (This section is unchanged) ... -->
+                 <h2 data-translate-key="report_title">Report Generation</h2>
+                <div class="content-box">
+                    <h3 data-translate-key="generate_report_title">Generate Your Analysis Report</h3>
+                    <p data-translate-key="generate_report_desc">Click the button below to ask the AI to generate a comprehensive summary of your data, findings, and model results.</p>
+                    <button id="generate-report-btn" data-translate-key="generate_report_btn_full">Generate Full Report</button>
+                    <div id="report-output" class="report-view"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Assistant Chat -->
+        <aside class="ai-assistant">
+             <!-- ... (This section is unchanged) ... -->
+             <h3 data-translate-key="ai_assistant_title">AI Assistant</h3>
+            <div id="chat-window">
+                <div class="ai-message">
+                    <p data-translate-key="ai_welcome_message">Hello! I'm your AI assistant. Upload a dataset to get started, or ask me a general question.</p>
+                </div>
+            </div>
+            <div id="contextual-prompts"></div>
+            <div class="chat-input-container">
+                <div id="ai-loading" class="loading-indicator" style="display: none;">
+                    <div class="spinner"></div> <span data-translate-key="ai_thinking">AI is thinking...</span>
+                </div>
+                <div class="chat-input">
+                    <input type="text" id="chat-input-field" placeholder-key="chat_placeholder" placeholder="Ask a question...">
+                    <button id="chat-send-btn" data-translate-key="chat_send_btn">Send</button>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <script type="module" src="js/main.js"></script>
+
+</body>
+</html>
